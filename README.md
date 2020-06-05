@@ -37,3 +37,36 @@ AdaBoost : {}
 Accuracy: 0.911         Precision: 0.887        Recall: 0.779           F1: 0.819
 
 ``` 
+
+## TODO 
+
+### Word Embedding 
+
+- [ ] Elmo 
+- [x] Word2Vec 
+- [x] TFIDF 
+- [x] Word2vec+TFIDF 
+- [x] FastText 
+- [ ] BERT 
+- [ ] ULM-Fit 
+- [ ] GloVe 
+
+## Classifier 
+- [x] SVM (kernel: linear) 
+- [x] Perceptron 
+- [x] Decision Tree 
+- [x] AdaBoost 
+- [x] Random Forest 
+- [x] Gradient Boosting 
+- [x] Gusassion NB 
+- [x] Multinomial NB 
+
+----
+
+We asked @parisahjb to implement: 
+* ROC curve (feasible) 
+* learning rate 
+* error analysis 
+* agreement rate 
+
+
