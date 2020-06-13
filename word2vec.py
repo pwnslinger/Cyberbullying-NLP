@@ -1,17 +1,21 @@
 import nltk
 import re
 import warnings
+import string
 import numpy as np
 import pandas as pd
 import multiprocessing as mp
 
-from collections import defaultdict
+from embedding import *
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from bs4 import BeautifulSoup
 from gensim.utils import simple_preprocess
 from gensim.models import word2vec
 from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -30,102 +34,80 @@ np.seterr(divide='ignore', invalid='ignore')
 pd.options.display.max_colwidth = 200
 
 lemmatizer = WordNetLemmatizer()
+stop=set(stopwords.words('english'))
 
-def preprocess(text):
-    result = []
-    for token in simple_preprocess(text):
-        if token not in STOPWORDS and len(token) > 3:
-            result.append(lemmatizer.lemmatize(token, pos='v'))
-    return " ".join(result).strip()
+def clean_tweets(data):
+    data["text"] = data['text'].apply(lambda x : x.lower())
 
-def clean_tweets(df):
-    URL = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-    MENTION = r'@[A-Za-z0-9_]+'
-    RT = r'RT '
-    LINE = r'\n'
-    AND = r'&amp;'
-    TRUNCATED = r'[^\s]+…'
-    EMOJI = r'\"\s|\s\"|&#\d+|@[A-Za-z0-9_]+|[:;#.&,!]|http'
+    def html_decode(text):
+        return BeautifulSoup(text, 'lxml').get_text().decode('utf-8')
 
-    pattern_list = [URL, MENTION, LINE, AND, TRUNCATED, EMOJI, RT]
+    data['text'] = data['text'].apply(lambda x: BeautifulSoup(x, 'lxml').get_text())
 
-    for i, t in df.items():
-        for p in pattern_list:
-            pattern = re.compile(p, re.IGNORECASE)
-            t = pattern.sub(" ", t).strip()
-        # preprocessing text
-        t = preprocess(t)
-        df[i] = t
+    def remove_stopwords(text):
+        if text is not None:
+            return " ".join([x for x in word_tokenize(text) if x not in stop])
+        else:
+            return None
 
+    def remove_URL(text):
+        url = re.compile(r'https?://\S+|www\.\S+')
+        return url.sub(r'', text)
 
-class MeanEmbeddingVectorizer(object):
-    def __init__(self, word2vec):
-        self.word2vec = word2vec
-        # if a text is empty we should return a vector of zeros
-        # with the same dimensionality as all the other vectors
-        self.dim = len(word2vec.values())
+    def remove_mentions(text):
+        mention = re.compile(r'(?:RT\s)@\S+', re.IGNORECASE)
+        return mention.sub('', text)
 
-    def fit(self, X, y):
-        return self
+    def remove_emoji(text):
+        emoji_pattern = re.compile("["
+                               u"\U0001F600-\U0001F64F"  # emoticons
+                               u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                               u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                               u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                               u"\U00002702-\U000027B0"
+                               u"\U000024C2-\U0001F251"
+                               "]+", flags=re.UNICODE)
+        return emoji_pattern.sub(r'', text)
 
-    def transform(self, X):
-        return np.array([
-            np.mean([self.word2vec[w] for w in words if w in self.word2vec]
-                    or [np.zeros(self.dim)], axis=0)
-            for words in X
-        ])
+    def remove_punct(text):
+        table = str.maketrans('', '', string.punctuation)
+        return text.translate(table)
 
+    def remove_illegal(text):
+        illegal = re.compile(r'”|“|’|\d+\S+')
+        return illegal.sub('', text)
 
-class TfidfVectorizerStub(object):
-    def __init__(self, tfidf):
-        self.tfidf = tfidf
+    func_list = [remove_URL, remove_mentions, remove_emoji, remove_punct, remove_stopwords, remove_illegal]
 
-    def fit(self, X, y):
-            self.tfidf.fit(X)
-            return self
+    for f in func_list:
+        data['text'] = data['text'].apply(lambda x: f(x))
 
-    def transform(self, X):
-        return np.array(self.tfidf.transform(X).todense())
+    # remove extra spaces left
+    data.text = data.text.replace('\s+', ' ', regex=True)
 
-
-class TfidfEmbeddingVectorizer(object):
-    def __init__(self, word2vec):
-        self.word2vec = word2vec
-        self.word2weight = None
-        self.dim = len(word2vec.values())
-
-    def fit(self, X, y):
-        tfidf = TfidfVectorizer(analyzer=lambda x: x)
-        tfidf.fit(X)
-        # if a word was never seen - it must be at least as infrequent
-        # as any of the known words - so the default idf is the max of
-        # known idf's
-        max_idf = max(tfidf.idf_)
-        self.word2weight = defaultdict(
-            lambda: max_idf,
-            [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
-
-        return self
-
-    def transform(self, X):
-        return np.array([
-                np.mean([self.word2vec[w] * self.word2weight[w]
-                         for w in words if w in self.word2vec] or
-                        [np.zeros(self.dim)], axis=0)
-                for words in X
-            ])
 
 class Classifier(object):
     def __init__(self, model, param):
         self.model = model
         self.param = param
-        self.gs = GridSearchCV(self.model, self.param, cv=5, error_score=0, refit=True)
+        self.gs = GridSearchCV(self.model, self.param, cv=5, error_score=0,
+                               refit=True, verbose=2)
 
     def fit(self, X, y):
         return self.gs.fit(X, y)
 
     def predict(self, X):
         return self.gs.predict(X)
+
+class VectorizerMixin(TransformerMixin):
+    def __init__(self, model, data):
+        self.model = model(data)
+
+    def fit(self, X, y = None):
+        return self.model.fit(X, y)
+
+    def transform(self, X, y = None):
+        return self.model.transform(X)
 
 clf_models = {
     'MultinomialNB': MultinomialNB(),
@@ -153,34 +135,29 @@ clf_params = {
     'RandomForest': {}
 }
 
+vec_cls = {
+    'Word2Vec': MeanEmbeddingVectorizer,
+    'Word2Vec-TFIDF': TfidfEmbeddingVectorizer,
+    'Tfidf': TfidfVectorizerStub,
+    'FastText': FastTextVectorizer
+}
 
-def exec_pipeline(vectorizer, cls_method, X_train, X_test, y_train, y_test):
-    print("%s Classifier Started!"%cls_method)
-    # Word2Vec
-    '''
-    clf = Pipeline([('Word2Vec vectorizer',
-                     MeanEmbeddingVectorizer(vectorizer)), ('Classifier',
-                                                            Classifier(clf_models[cls_method],
-                                                                       clf_params[cls_method]))])
-    '''
 
-    # Word2Vec-TFIDF
-    '''
-    clf = Pipeline([('Word2Vec-TFIDF vectorizer',
-                     TfidfEmbeddingVectorizer(vectorizer)), ('Classifier',
-                                                            Classifier(clf_models[cls_method],
-                                                                       clf_params[cls_method]))])
-    '''
+def exec_pipeline(vec_method, clf_method, data):
 
-    # TFIDF
-    clf = Pipeline([('TFIDF vectorizer', TfidfVectorizerStub(vectorizer)),
-                    ('Classifier', Classifier(clf_models[cls_method],
-                        clf_params[cls_method]))])
+    print("%s Classifier with %s Vectorizer Started!"%(clf_method, vec_method))
+
+    X_train, X_test, y_train, y_test = train_test_split(data['text'], data['label'],
+                                                        test_size=0.3, shuffle=True)
+
+    clf = Pipeline([(vec_method, VectorizerMixin(vec_cls[vec_method], data)),
+                    ('Classifier', Classifier(clf_models[clf_method],
+                                              clf_params[clf_method]))])
 
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
 
-    print(cls_method, ':', clf_params[cls_method])
+    print(clf_method, ':', clf_params[clf_method])
     print("Accuracy: %1.3f \tPrecision: %1.3f \tRecall: %1.3f \t\tF1: %1.3f\n" % (accuracy_score(y_test, y_pred), precision_score(y_test, y_pred, average='macro'), recall_score(y_test, y_pred, average='macro'), f1_score(y_test, y_pred, average='macro')))
 
 
@@ -188,37 +165,15 @@ if __name__ == '__main__':
     data = pd.read_csv('./DS2_clean.csv', encoding='utf-8')
     data['label'] = data['label'].apply(lambda label: 0 if label == False else 1)
 
-    clean_tweets(data['text'])
-
-    # build tfidf model
-    tfidf = TfidfVectorizer()
-
-    # build word2vec model
-    wpt = nltk.WordPunctTokenizer()
-    tokenized_corpus = [wpt.tokenize(document) for document in data['text']]
-
-    # Set values for various parameters
-    feature_size = 100    # Word vector dimensionality
-    window_context = 10  # Context window size
-    min_word_count = 1   # Minimum word count
-    sample = 1e-3   # Downsample setting for frequent words
-
-    w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size,
-                            window=window_context, min_count=min_word_count,
-                            sample=sample, iter=50)
-
-    w2v = dict(zip(w2v_model.wv.index2word, w2v_model.wv.vectors))
-
-    X_train, X_test, y_train, y_test = train_test_split(data['text'], data['label'],
-                                                        test_size=0.3, shuffle=True)
+    clean_tweets(data)
 
     procs = []
 
-    for key in clf_models.keys():
-        proc = mp.Process(target=exec_pipeline, args=(tfidf, key, X_train, X_test,
-                                                y_train, y_test, ))
-        procs.append(proc)
-        proc.start()
+    for clf_method in clf_models.keys():
+        for vec_method in vec_cls.keys():
+            proc = mp.Process(target=exec_pipeline, args=(vec_method, clf_method, data, ))
+            procs.append(proc)
+            proc.start()
 
     for proc in procs:
         proc.join()
