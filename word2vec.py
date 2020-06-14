@@ -6,13 +6,11 @@ import numpy as np
 import pandas as pd
 import multiprocessing as mp
 
-from embedding import *
+from scipy.sparse.csr import csr_matrix
+from tokenizer import MyTokenizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
-from gensim.utils import simple_preprocess
-from gensim.models import word2vec
-from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
@@ -25,15 +23,21 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from sklearn.exceptions import UndefinedMetricWarning
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.decomposition import NMF
+from sklearn.exceptions import NotFittedError
+from sklearn.metrics import classification_report, confusion_matrix
+from embedding import MeanEmbeddingVectorizer, TfidfEmbeddingVectorizer, FastTextVectorizer, TfidfVectorizerStub
 
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 np.seterr(divide='ignore', invalid='ignore')
 pd.options.display.max_colwidth = 200
 
 lemmatizer = WordNetLemmatizer()
+
+nltk.download('stopwords')
 stop=set(stopwords.words('english'))
 
 def clean_tweets(data):
@@ -85,21 +89,27 @@ def clean_tweets(data):
     # remove extra spaces left
     data.text = data.text.replace('\s+', ' ', regex=True)
 
-
 class Classifier(object):
     def __init__(self, model, param):
         self.model = model
         self.param = param
         self.gs = GridSearchCV(self.model, self.param, cv=5, error_score=0,
-                               refit=True, verbose=2)
+                               refit=True, verbose=0)
 
-    def fit(self, X, y):
-        return self.gs.fit(X, y)
+    def fit(self, X, y = None):
+        # MultinomialNB cannot process negative values in embedding, scale to [0,1]
+        if self.model.__class__.__name__ == 'MultinomialNB':
+            if (isinstance(X, csr_matrix) and any((X<0).indptr !=0 )) or \
+                    (isinstance(X, np.ndarray) and (X < 0).any()):
+                print('MultinomialNB with negative values in embedding feature vector detected!')
+                return
+        else:
+            return self.gs.fit(X, y)
 
     def predict(self, X):
         return self.gs.predict(X)
 
-class VectorizerMixin(TransformerMixin):
+class VectorizerMixin(TransformerMixin, BaseEstimator):
     def __init__(self, model, data):
         self.model = model(data)
 
@@ -110,7 +120,7 @@ class VectorizerMixin(TransformerMixin):
         return self.model.transform(X)
 
 clf_models = {
-    'MultinomialNB': MultinomialNB(),
+    #'MultinomialNB': MultinomialNB(),
     'NaiveBayes': GaussianNB(),
     'SVC': SVC(),
     'DecisionTree': DecisionTreeClassifier(),
@@ -123,8 +133,8 @@ clf_models = {
 }
 
 clf_params = {
+    #'MultinomialNB': { 'alpha': [0.5, 1], 'fit_prior': [True, False] },
     'NaiveBayes': {},
-    'MultinomialNB': { 'alpha': [0.5, 1], 'fit_prior': [True, False] },
     'SVC': { 'kernel': ['linear'] },
     'DecisionTree': { 'min_samples_split': [2, 5] },
     'Perceptron': { 'alpha': [0.0001, 0.001], 'activation': ['tanh', 'relu'] },
@@ -147,7 +157,8 @@ def exec_pipeline(vec_method, clf_method, data):
 
     print("%s Classifier with %s Vectorizer Started!"%(clf_method, vec_method))
 
-    X_train, X_test, y_train, y_test = train_test_split(data['text'], data['label'],
+    X_train, X_test, y_train, y_test = train_test_split(data['text'].values.ravel(),
+                                                        data['label'].values.ravel(),
                                                         test_size=0.3, shuffle=True)
 
     clf = Pipeline([(vec_method, VectorizerMixin(vec_cls[vec_method], data)),
@@ -155,10 +166,14 @@ def exec_pipeline(vec_method, clf_method, data):
                                               clf_params[clf_method]))])
 
     clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    try:
+        y_pred = clf.predict(X_test)
+    except NotFittedError:
+        return
 
     print(clf_method, ':', clf_params[clf_method])
-    print("Accuracy: %1.3f \tPrecision: %1.3f \tRecall: %1.3f \t\tF1: %1.3f\n" % (accuracy_score(y_test, y_pred), precision_score(y_test, y_pred, average='macro'), recall_score(y_test, y_pred, average='macro'), f1_score(y_test, y_pred, average='macro')))
+    print(clf.steps[1][1].gs.best_estimator_)
+    print(classification_report(y_test, y_pred))
 
 
 if __name__ == '__main__':
@@ -168,7 +183,7 @@ if __name__ == '__main__':
     clean_tweets(data)
 
     procs = []
-
+    '''
     for clf_method in clf_models.keys():
         for vec_method in vec_cls.keys():
             proc = mp.Process(target=exec_pipeline, args=(vec_method, clf_method, data, ))
@@ -177,3 +192,8 @@ if __name__ == '__main__':
 
     for proc in procs:
         proc.join()
+    '''
+
+    for clf_method in clf_models.keys():
+        for vec_method in vec_cls.keys():
+            exec_pipeline(vec_method, clf_method, data)
