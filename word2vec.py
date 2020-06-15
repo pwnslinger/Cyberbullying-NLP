@@ -143,11 +143,11 @@ if __name__ == '__main__':
         print('Usage: %s dataset.csv'%__name__)
         sys.exit('not enough arguments provided!')
 
-    fname = sys.argv[0]
+    fname = sys.argv[1]
     REPORT_NAME = fname.split('.')[0] + REPORT_SUFFIX
 
     if os.path.exists(fname):
-        data = pd.read_csv(fname, encoding='utf-8')
+        data = pd.read_csv(os.path.join(os.getcwd(), fname), encoding='utf-8')
         data['label'] = data['label'].apply(lambda label: 0 if label == False else 1)
 
         # clean the tweets
