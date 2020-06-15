@@ -76,12 +76,15 @@ class FastTextVectorizer(Vectorizer):
         ])
 
 class TfidfVectorizerStub(Vectorizer):
-    def __init__(self, data=None, analyzer='word', ngram_range=(2,3)):
+    def __init__(self, data=None, analyzer='word', ngram_range=(1,3),
+                 maxFeats=1000):
         # build tfidf model
         self.analyzer = analyzer
         self.ngram_range = ngram_range
+        self.maxFeats = maxFeats
         self.tfidf = TfidfVectorizer(analyzer=self.analyzer,
-                                     ngram_range=self.ngram_range)
+                                     ngram_range=self.ngram_range,
+                                     max_features=maxFeats)
 
     def fit(self, X, y):
             self.tfidf.fit(X)

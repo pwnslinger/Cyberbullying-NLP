@@ -183,7 +183,7 @@ if __name__ == '__main__':
     clean_tweets(data)
 
     procs = []
-    '''
+
     for clf_method in clf_models.keys():
         for vec_method in vec_cls.keys():
             proc = mp.Process(target=exec_pipeline, args=(vec_method, clf_method, data, ))
@@ -192,8 +192,3 @@ if __name__ == '__main__':
 
     for proc in procs:
         proc.join()
-    '''
-
-    for clf_method in clf_models.keys():
-        for vec_method in vec_cls.keys():
-            exec_pipeline(vec_method, clf_method, data)
