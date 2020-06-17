@@ -152,7 +152,7 @@ if __name__ == '__main__':
         data['label'] = data['label'].apply(lambda label: 0 if label == False else 1)
 
         # clean the tweets
-        clean_tweets(data)
+        clean_tweets(data, exp_flag=True)
 
         #must use Manager queue here, or will not work
         manager = mp.Manager()
