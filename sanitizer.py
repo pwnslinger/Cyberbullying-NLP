@@ -54,3 +54,12 @@ def clean_tweets(data):
 
     # remove extra spaces left
     data.text = data.text.replace('\s+', ' ', regex=True)
+    
+    
+    #replace short-form slangs with the exapnded one
+    def expand_slangs():
+    slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None, error_bad_lines=False)
+    slang.columns = ['short_form', 'long_form']
+    slang = {str(k):str(v) for k, v in list(zip(slang.short_form, slang.long_form))}
+    pattern = re.compile(r'\b(' + '|'.join(re.escape(key) for key in slang.keys()) + r')\b')
+    data.text = data.text.map(lambda t: pattern.sub(lambda x: slang[x.group()], t))
