@@ -131,7 +131,8 @@ def exec_pipeline(vec_method, clf_method, data, q):
 
 
 def listener(q):
-    with open(REPORT_NAME, 'w') as f:
+    report_path = os.path.join('results', REPORT_NAME)
+    with open(report_path, 'w') as f:
         while True:
             msg = q.get()
             if msg == 'done':
