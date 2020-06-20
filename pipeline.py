@@ -163,7 +163,6 @@ if __name__ == '__main__':
 
         jobs = []
 
-        '''
         for clf_method in clf_models.keys():
             for vec_method in vec_cls.keys():
                 job = pool.apply_async(exec_pipeline, (vec_method, clf_method,
@@ -176,8 +175,3 @@ if __name__ == '__main__':
         q.put('done')
         pool.close()
         pool.join()
-        '''
-
-        for clf_method in clf_models.keys():
-            for vec_method in vec_cls.keys():
-                exec_pipeline(vec_method, clf_method, data, q)
