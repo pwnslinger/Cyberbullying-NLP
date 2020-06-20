@@ -23,10 +23,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.decomposition import NMF
 from sklearn.exceptions import NotFittedError
-from sklearn.metrics import classification_report, confusion_matrix
+from report import Writer
 from embedding import MeanEmbeddingVectorizer, TfidfEmbeddingVectorizer, FastTextVectorizer, TfidfVectorizerStub
 
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
@@ -103,7 +101,6 @@ vec_cls = {
     'FastText': FastTextVectorizer
 }
 
-
 def exec_pipeline(vec_method, clf_method, data, q):
 
     print("%s Classifier with %s Vectorizer Started!"%(clf_method, vec_method))
@@ -122,13 +119,14 @@ def exec_pipeline(vec_method, clf_method, data, q):
     except NotFittedError:
         return
 
-    results = "%s with %s\n"%(clf_method, vec_method)
-    results += "%s\n" % clf.steps[1][1].gs.best_estimator_
-    results += classification_report(y_test, y_pred)
-    results += "\n-----------------------------------\n"
-    q.put(results)
-    print(results)
+    # generate all plots
+    ds_name = os.path.basename(fname).split('.')[0]
+    writer = Writer(ds_name, y_test, y_pred, clf_method, vec_method)
+    writer.generate_plots()
 
+    # generate CSV report
+    best_estimator = clf.steps[1][1].gs.best_estimator_
+    writer.classification_report(best_estimator, q)
 
 def listener(q):
     report_path = os.path.join('results', REPORT_NAME)
@@ -165,6 +163,7 @@ if __name__ == '__main__':
 
         jobs = []
 
+        '''
         for clf_method in clf_models.keys():
             for vec_method in vec_cls.keys():
                 job = pool.apply_async(exec_pipeline, (vec_method, clf_method,
@@ -177,3 +176,8 @@ if __name__ == '__main__':
         q.put('done')
         pool.close()
         pool.join()
+        '''
+
+        for clf_method in clf_models.keys():
+            for vec_method in vec_cls.keys():
+                exec_pipeline(vec_method, clf_method, data, q)

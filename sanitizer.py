@@ -4,11 +4,18 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from pycontractions import Contractions
 
+cont = Contractions(api_key="glove-twitter-100")
 stop=set(stopwords.words('english'))
 
 def clean_tweets(data, exp_flag=False):
-    data["text"] = data['text'].apply(lambda x : x.lower())
+    data['text'] = data['text'].apply(lambda x : x.lower())
+
+    slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None, error_bad_lines=False)
+    slang.columns = ['short_form', 'long_form']
+    slang = {str(k):str(v) for k, v in list(zip(slang.short_form, slang.long_form))}
+    pattern = re.compile(r'\b(' + '|'.join(re.escape(key) for key in slang.keys()) + r')\b')
 
     def html_decode(text):
         return BeautifulSoup(text, 'lxml').get_text().decode('utf-8')
@@ -50,13 +57,14 @@ def clean_tweets(data, exp_flag=False):
 
     #replace short-form slangs with the exapnded one
     def expand_slangs(text):
-        slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None, error_bad_lines=False)
-        slang.columns = ['short_form', 'long_form']
-        slang = {str(k):str(v) for k, v in list(zip(slang.short_form, slang.long_form))}
-        pattern = re.compile(r'\b(' + '|'.join(re.escape(key) for key in slang.keys()) + r')\b')
-        data.text = data.text.map(lambda t: pattern.sub(lambda x: slang[x.group()], t))
+        return pattern.sub(lambda x: slang[x.group()], text)
 
-    func_list = [remove_URL, remove_mentions, remove_emoji, remove_punct,
+    def replace_question(text):
+        single_quote = re.compile(r'(\w{1,4})\?(\w{1,2})')
+        return single_quote.sub(r'\1\'\2', text)
+        #return list(cont.expand_texts([text]))[0]
+
+    func_list = [remove_URL, replace_question, remove_mentions, remove_emoji,
                     remove_stopwords, remove_illegal]
 
     if exp_flag:
@@ -67,5 +75,3 @@ def clean_tweets(data, exp_flag=False):
 
     # remove extra spaces left
     data.text = data.text.replace('\s+', ' ', regex=True)
-
-
