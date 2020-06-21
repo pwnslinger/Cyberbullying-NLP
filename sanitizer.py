@@ -10,6 +10,16 @@ cont = Contractions(api_key="glove-twitter-100")
 stop=set(stopwords.words('english'))
 
 def clean_tweets(data, exp_flag=False):
+    '''
+    Desc: clean tweets and returns the cleaned dataframe as a reference to
+    dataframe
+
+    input:
+    data: DataFrame
+    exp_flag: boolean
+
+    return: None
+    '''
     data['text'] = data['text'].apply(lambda x : x.lower())
 
     slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None, error_bad_lines=False)

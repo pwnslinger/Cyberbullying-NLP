@@ -72,12 +72,11 @@ clf_models = {
     'NaiveBayes': GaussianNB(),
     'SVC': SVC(),
     'DecisionTree': DecisionTreeClassifier(),
-    'Perceptron': MLPClassifier(),
+    'MLPClassifier': MLPClassifier(),
     'RandomForest': RandomForestClassifier(),
     'GradientBoosting': GradientBoostingClassifier(),
     'LogisticRegression': LogisticRegression(),
     'AdaBoost': AdaBoostClassifier(),
-    'MLPClassifier': MLPClassifier()
 }
 
 clf_params = {
@@ -85,10 +84,10 @@ clf_params = {
     'NaiveBayes': {},
     'SVC': { 'kernel': ['linear'] },
     'DecisionTree': { 'min_samples_split': [2, 5] },
-    'Perceptron': { 'alpha': [0.0001, 0.001], 'activation': ['tanh', 'relu'],
-                   'max_iter': 800 },
+    'MLPClassifier': { 'alpha': [0.0001, 0.001], 'activation': ['tanh', 'relu'],
+                   'solver': ['sgd', 'adam'], 'max_iter': [300,  500],
+                   'hidden_layer_sizes': [100, 150, 50]},
     'GradientBoosting': { 'learning_rate': [0.05, 0.1], 'min_samples_split': [2, 5] },
-    'MLPClassifier': { 'hidden_layer_sizes': [100,100]},
     'LogisticRegression': { 'max_iter': 700 },
     'AdaBoost': {},
     'RandomForest': {}
@@ -129,7 +128,7 @@ def exec_pipeline(vec_method, clf_method, data, q):
     writer.classification_report(best_estimator, q)
 
 def listener(q):
-    report_path = os.path.join('results', REPORT_NAME)
+    report_path = os.path.join('./results', REPORT_NAME)
     with open(report_path, 'w') as f:
         while True:
             msg = q.get()
