@@ -84,9 +84,9 @@ clf_params = {
     'NaiveBayes': {},
     'SVC': { 'kernel': ['linear'] },
     'DecisionTree': { 'min_samples_split': [2, 5] },
-    'MLPClassifier': { 'alpha': [0.0001, 0.001], 'activation': ['tanh', 'relu'],
-                   'solver': ['sgd', 'adam'], 'max_iter': [300,  500],
-                   'hidden_layer_sizes': [100, 150, 50]},
+    'MLPClassifier': { 'alpha': [0.0001, 0.05], 'activation': ['tanh', 'relu'],
+                   'solver': ['sgd', 'adam'], 'hidden_layer_sizes': [100, 150, 50], 'learning_rate':
+                      ['constant', 'adaptive']},
     'GradientBoosting': { 'learning_rate': [0.05, 0.1], 'min_samples_split': [2, 5] },
     'LogisticRegression': { 'max_iter': [700, 800] },
     'AdaBoost': {},
