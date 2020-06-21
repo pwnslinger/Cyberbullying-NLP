@@ -23,11 +23,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.pipeline import Pipeline
-from sklearn.exceptions import NotFittedError
+from sklearn.exceptions import NotFittedError, ConvergenceWarning
 from report import Writer
 from embedding import MeanEmbeddingVectorizer, TfidfEmbeddingVectorizer, FastTextVectorizer, TfidfVectorizerStub
 
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 np.seterr(divide='ignore', invalid='ignore')
 pd.options.display.max_colwidth = 200
 
