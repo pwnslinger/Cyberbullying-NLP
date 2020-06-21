@@ -18,14 +18,14 @@ class Writer(object):
         self._plot_roc(dir_path)
         self._plot_confusion_matrix(dir_path)
 
-    def classification_report(self, best_estimator, queue):
+    def classification_report(self, best_estimator):
         results = "%s with %s\n"%(self.clf_method, self.vec_method)
         results += "%s\n" % best_estimator
         results += classification_report(self.y_test, self.y_pred)
         results += "AUC score: %s\n"%roc_auc_score(self.y_test, self.y_pred)
         results += "\n-----------------------------------\n"
-        queue.put(results)
         print(results)
+        return results
 
     def _make_dirs(self):
         dir_path = './results/%s' % self.ds_name

@@ -22,9 +22,9 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.exceptions import UndefinedMetricWarning
+from report import Writer
 from sklearn.pipeline import Pipeline
 from sklearn.exceptions import NotFittedError, ConvergenceWarning
-from report import Writer
 from embedding import MeanEmbeddingVectorizer, TfidfEmbeddingVectorizer, FastTextVectorizer, TfidfVectorizerStub
 
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
@@ -126,10 +126,11 @@ def exec_pipeline(vec_method, clf_method, data, q):
 
     # generate CSV report
     best_estimator = clf.steps[1][1].gs.best_estimator_
-    writer.classification_report(best_estimator, q)
+    result = writer.classification_report(best_estimator)
+    q.put(result)
 
 def listener(q):
-    report_path = os.path.join('./results', REPORT_NAME)
+    report_path = os.path.join('results', REPORT_NAME)
     with open(report_path, 'w') as f:
         while True:
             msg = q.get()
@@ -144,7 +145,7 @@ if __name__ == '__main__':
         sys.exit('not enough arguments provided!')
 
     fname = sys.argv[1]
-    REPORT_NAME = fname.split('.')[0] + REPORT_SUFFIX
+    REPORT_NAME = os.path.basename(fname).split('.')[0] + REPORT_SUFFIX
 
     if os.path.exists(fname):
         data = pd.read_csv(os.path.join(os.getcwd(), fname), encoding='utf-8')

@@ -23,7 +23,8 @@ def clean_tweets(data, exp_flag=False):
     '''
     data['text'] = data['text'].apply(lambda x : x.lower())
 
-    slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None, error_bad_lines=False)
+    slang = pd.read_csv('twitter_moods/slang.txt',sep="-",header = None,
+                        error_bad_lines=False, warn_bad_lines=False)
     slang.columns = ['short_form', 'long_form']
     slang = {str(k):str(v) for k, v in list(zip(slang.short_form, slang.long_form))}
     pattern = re.compile(r'\b(' + '|'.join(re.escape(key) for key in slang.keys()) + r')\b')
