@@ -88,7 +88,7 @@ clf_params = {
                    'solver': ['sgd', 'adam'], 'max_iter': [300,  500],
                    'hidden_layer_sizes': [100, 150, 50]},
     'GradientBoosting': { 'learning_rate': [0.05, 0.1], 'min_samples_split': [2, 5] },
-    'LogisticRegression': { 'max_iter': 700 },
+    'LogisticRegression': { 'max_iter': [700, 800] },
     'AdaBoost': {},
     'RandomForest': {}
 }
