@@ -1,0 +1,592 @@
+NaiveBayes with Tfidf
+GaussianNB(priors=None, var_smoothing=1e-09)
+              precision    recall  f1-score   support
+
+           0       0.89      0.46      0.61      3274
+           1       0.44      0.88      0.58      1553
+
+    accuracy                           0.60      4827
+   macro avg       0.66      0.67      0.60      4827
+weighted avg       0.74      0.60      0.60      4827
+AUC score: 0.6707907842664463
+
+-----------------------------------
+
+NaiveBayes with Word2Vec-TFIDF
+GaussianNB(priors=None, var_smoothing=1e-09)
+              precision    recall  f1-score   support
+
+           0       0.80      0.29      0.43      3274
+           1       0.36      0.85      0.51      1553
+
+    accuracy                           0.47      4827
+   macro avg       0.58      0.57      0.47      4827
+weighted avg       0.66      0.47      0.45      4827
+AUC score: 0.5681346250443995
+
+-----------------------------------
+
+NaiveBayes with Word2Vec
+GaussianNB(priors=None, var_smoothing=1e-09)
+              precision    recall  f1-score   support
+
+           0       0.83      0.72      0.77      3274
+           1       0.54      0.69      0.61      1553
+
+    accuracy                           0.71      4827
+   macro avg       0.69      0.71      0.69      4827
+weighted avg       0.74      0.71      0.72      4827
+AUC score: 0.7077579760693335
+
+-----------------------------------
+
+LogisticRegression with Tfidf
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=700,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.82      0.94      0.88      3315
+           1       0.82      0.56      0.66      1512
+
+    accuracy                           0.82      4827
+   macro avg       0.82      0.75      0.77      4827
+weighted avg       0.82      0.82      0.81      4827
+AUC score: 0.7505356843592138
+
+-----------------------------------
+
+LogisticRegression with Word2Vec
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=700,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.82      0.92      0.87      3274
+           1       0.77      0.57      0.66      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.80      0.75      0.76      4827
+weighted avg       0.80      0.81      0.80      4827
+AUC score: 0.7463772405744336
+
+-----------------------------------
+
+LogisticRegression with Word2Vec-TFIDF
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=700,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.73      0.94      0.82      3315
+           1       0.64      0.25      0.36      1512
+
+    accuracy                           0.72      4827
+   macro avg       0.69      0.59      0.59      4827
+weighted avg       0.70      0.72      0.68      4827
+AUC score: 0.5930531614355143
+
+-----------------------------------
+
+DecisionTree with Word2Vec-TFIDF
+DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+                       max_depth=None, max_features=None, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, presort='deprecated',
+                       random_state=None, splitter='best')
+              precision    recall  f1-score   support
+
+           0       0.72      0.72      0.72      3274
+           1       0.42      0.41      0.41      1553
+
+    accuracy                           0.62      4827
+   macro avg       0.57      0.57      0.57      4827
+weighted avg       0.62      0.62      0.62      4827
+AUC score: 0.5684700548055451
+
+-----------------------------------
+
+DecisionTree with Word2Vec
+DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+                       max_depth=None, max_features=None, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, presort='deprecated',
+                       random_state=None, splitter='best')
+              precision    recall  f1-score   support
+
+           0       0.81      0.79      0.80      3274
+           1       0.58      0.61      0.59      1553
+
+    accuracy                           0.73      4827
+   macro avg       0.69      0.70      0.70      4827
+weighted avg       0.73      0.73      0.73      4827
+AUC score: 0.6977225194423389
+
+-----------------------------------
+
+RandomForest with Word2Vec
+RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.83      0.94      0.88      3274
+           1       0.83      0.59      0.69      1553
+
+    accuracy                           0.83      4827
+   macro avg       0.83      0.77      0.78      4827
+weighted avg       0.83      0.83      0.82      4827
+AUC score: 0.765252662885518
+
+-----------------------------------
+
+RandomForest with Word2Vec-TFIDF
+RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.73      0.94      0.82      3274
+           1       0.67      0.28      0.39      1553
+
+    accuracy                           0.72      4827
+   macro avg       0.70      0.61      0.61      4827
+weighted avg       0.71      0.72      0.68      4827
+AUC score: 0.606692821862114
+
+-----------------------------------
+
+NaiveBayes with FastText
+GaussianNB(priors=None, var_smoothing=1e-09)
+              precision    recall  f1-score   support
+
+           0       0.84      0.80      0.82      3274
+           1       0.62      0.68      0.65      1553
+
+    accuracy                           0.76      4827
+   macro avg       0.73      0.74      0.73      4827
+weighted avg       0.77      0.76      0.76      4827
+AUC score: 0.7409224505273062
+
+-----------------------------------
+
+AdaBoost with Tfidf
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
+                   n_estimators=50, random_state=None)
+              precision    recall  f1-score   support
+
+           0       0.84      0.94      0.88      3328
+           1       0.81      0.59      0.68      1499
+
+    accuracy                           0.83      4827
+   macro avg       0.82      0.76      0.78      4827
+weighted avg       0.83      0.83      0.82      4827
+AUC score: 0.7631625210075949
+
+-----------------------------------
+
+AdaBoost with Word2Vec
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
+                   n_estimators=50, random_state=None)
+              precision    recall  f1-score   support
+
+           0       0.82      0.90      0.86      3328
+           1       0.72      0.56      0.63      1499
+
+    accuracy                           0.80      4827
+   macro avg       0.77      0.73      0.74      4827
+weighted avg       0.79      0.80      0.79      4827
+AUC score: 0.7305413144019091
+
+-----------------------------------
+
+AdaBoost with Word2Vec-TFIDF
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
+                   n_estimators=50, random_state=None)
+              precision    recall  f1-score   support
+
+           0       0.73      0.91      0.81      3315
+           1       0.57      0.25      0.34      1512
+
+    accuracy                           0.71      4827
+   macro avg       0.65      0.58      0.58      4827
+weighted avg       0.68      0.71      0.66      4827
+AUC score: 0.5804819363642892
+
+-----------------------------------
+
+DecisionTree with FastText
+DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+                       max_depth=None, max_features=None, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=5,
+                       min_weight_fraction_leaf=0.0, presort='deprecated',
+                       random_state=None, splitter='best')
+              precision    recall  f1-score   support
+
+           0       0.79      0.80      0.79      3274
+           1       0.56      0.56      0.56      1553
+
+    accuracy                           0.72      4827
+   macro avg       0.68      0.68      0.68      4827
+weighted avg       0.72      0.72      0.72      4827
+AUC score: 0.6759861595642619
+
+-----------------------------------
+
+LogisticRegression with FastText
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=700,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.83      0.91      0.87      3315
+           1       0.75      0.58      0.65      1512
+
+    accuracy                           0.81      4827
+   macro avg       0.79      0.74      0.76      4827
+weighted avg       0.80      0.81      0.80      4827
+AUC score: 0.7444393569393569
+
+-----------------------------------
+
+SVC with Word2Vec
+SVC(C=1.0, break_ties=False, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+              precision    recall  f1-score   support
+
+           0       0.82      0.93      0.87      3274
+           1       0.79      0.57      0.66      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.80      0.75      0.76      4827
+weighted avg       0.81      0.81      0.80      4827
+AUC score: 0.7474833425836294
+
+-----------------------------------
+
+SVC with Word2Vec-TFIDF
+SVC(C=1.0, break_ties=False, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+              precision    recall  f1-score   support
+
+           0       0.70      0.97      0.81      3274
+           1       0.60      0.11      0.18      1553
+
+    accuracy                           0.69      4827
+   macro avg       0.65      0.54      0.50      4827
+weighted avg       0.66      0.69      0.61      4827
+AUC score: 0.5366624433919256
+
+-----------------------------------
+
+RandomForest with FastText
+RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.81      0.95      0.87      3274
+           1       0.83      0.52      0.64      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.82      0.73      0.76      4827
+weighted avg       0.81      0.81      0.80      4827
+AUC score: 0.7341630147337351
+
+-----------------------------------
+
+SVC with FastText
+SVC(C=1.0, break_ties=False, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+              precision    recall  f1-score   support
+
+           0       0.83      0.90      0.86      3274
+           1       0.74      0.61      0.67      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.79      0.76      0.77      4827
+weighted avg       0.80      0.81      0.80      4827
+AUC score: 0.755091039039658
+
+-----------------------------------
+
+DecisionTree with Tfidf
+DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+                       max_depth=None, max_features=None, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=5,
+                       min_weight_fraction_leaf=0.0, presort='deprecated',
+                       random_state=None, splitter='best')
+              precision    recall  f1-score   support
+
+           0       0.83      0.85      0.84      3274
+           1       0.68      0.64      0.66      1553
+
+    accuracy                           0.79      4827
+   macro avg       0.75      0.75      0.75      4827
+weighted avg       0.78      0.79      0.78      4827
+AUC score: 0.7473483249752877
+
+-----------------------------------
+
+RandomForest with Tfidf
+RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.85      0.91      0.87      3274
+           1       0.77      0.65      0.70      1553
+
+    accuracy                           0.82      4827
+   macro avg       0.81      0.78      0.79      4827
+weighted avg       0.82      0.82      0.82      4827
+AUC score: 0.777987094952092
+
+-----------------------------------
+
+AdaBoost with FastText
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
+                   n_estimators=50, random_state=None)
+              precision    recall  f1-score   support
+
+           0       0.82      0.88      0.85      3296
+           1       0.68      0.58      0.63      1531
+
+    accuracy                           0.78      4827
+   macro avg       0.75      0.73      0.74      4827
+weighted avg       0.78      0.78      0.78      4827
+AUC score: 0.7271335759989346
+
+-----------------------------------
+
+SVC with Tfidf
+SVC(C=1.0, break_ties=False, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+              precision    recall  f1-score   support
+
+           0       0.83      0.94      0.88      3274
+           1       0.82      0.60      0.69      1553
+
+    accuracy                           0.83      4827
+   macro avg       0.83      0.77      0.79      4827
+weighted avg       0.83      0.83      0.82      4827
+AUC score: 0.7671308138700158
+
+-----------------------------------
+
+GradientBoosting with Tfidf
+GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=3,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=5,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=None, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.80      0.96      0.87      3274
+           1       0.84      0.50      0.63      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.82      0.73      0.75      4827
+weighted avg       0.82      0.81      0.79      4827
+AUC score: 0.7294573609869325
+
+-----------------------------------
+
+GradientBoosting with Word2Vec
+GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=3,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=2,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=None, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.82      0.92      0.87      3274
+           1       0.78      0.56      0.65      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.80      0.74      0.76      4827
+weighted avg       0.80      0.81      0.80      4827
+AUC score: 0.7421091894183957
+
+-----------------------------------
+
+GradientBoosting with Word2Vec-TFIDF
+GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=3,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=5,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=None, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.73      0.94      0.82      3274
+           1       0.66      0.25      0.37      1553
+
+    accuracy                           0.72      4827
+   macro avg       0.70      0.60      0.59      4827
+weighted avg       0.71      0.72      0.67      4827
+AUC score: 0.5966295356771
+
+-----------------------------------
+
+GradientBoosting with FastText
+GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=3,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=5,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=None, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.82      0.92      0.87      3274
+           1       0.77      0.58      0.66      1553
+
+    accuracy                           0.81      4827
+   macro avg       0.79      0.75      0.76      4827
+weighted avg       0.80      0.81      0.80      4827
+AUC score: 0.7492212640637606
+
+-----------------------------------
+
+MLPClassifier with Word2Vec
+MLPClassifier(activation='tanh', alpha=0.001, batch_size='auto', beta_1=0.9,
+              beta_2=0.999, early_stopping=False, epsilon=1e-08,
+              hidden_layer_sizes=(150, 50, 100), learning_rate='constant',
+              learning_rate_init=0.001, max_fun=15000, max_iter=200,
+              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+              power_t=0.5, random_state=None, shuffle=True, solver='sgd',
+              tol=0.0001, validation_fraction=0.1, verbose=False,
+              warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.86      0.91      0.88      3274
+           1       0.78      0.69      0.73      1553
+
+    accuracy                           0.84      4827
+   macro avg       0.82      0.80      0.81      4827
+weighted avg       0.83      0.84      0.83      4827
+AUC score: 0.7978988978708323
+
+-----------------------------------
+
+MLPClassifier with Word2Vec-TFIDF
+MLPClassifier(activation='tanh', alpha=0.05, batch_size='auto', beta_1=0.9,
+              beta_2=0.999, early_stopping=False, epsilon=1e-08,
+              hidden_layer_sizes=(150, 50, 100), learning_rate='adaptive',
+              learning_rate_init=0.001, max_fun=15000, max_iter=200,
+              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+              power_t=0.5, random_state=None, shuffle=True, solver='adam',
+              tol=0.0001, validation_fraction=0.1, verbose=False,
+              warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.75      0.91      0.83      3274
+           1       0.67      0.38      0.48      1553
+
+    accuracy                           0.74      4827
+   macro avg       0.71      0.64      0.65      4827
+weighted avg       0.73      0.74      0.71      4827
+AUC score: 0.6432601727360016
+
+-----------------------------------
+
+MLPClassifier with FastText
+MLPClassifier(activation='relu', alpha=0.001, batch_size='auto', beta_1=0.9,
+              beta_2=0.999, early_stopping=False, epsilon=1e-08,
+              hidden_layer_sizes=(150, 50, 100), learning_rate='adaptive',
+              learning_rate_init=0.001, max_fun=15000, max_iter=200,
+              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+              power_t=0.5, random_state=None, shuffle=True, solver='sgd',
+              tol=0.0001, validation_fraction=0.1, verbose=False,
+              warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.85      0.92      0.88      3274
+           1       0.79      0.66      0.72      1553
+
+    accuracy                           0.83      4827
+   macro avg       0.82      0.79      0.80      4827
+weighted avg       0.83      0.83      0.83      4827
+AUC score: 0.7882647572377501
+
+-----------------------------------
+
+MLPClassifier with Tfidf
+MLPClassifier(activation='relu', alpha=0.05, batch_size='auto', beta_1=0.9,
+              beta_2=0.999, early_stopping=False, epsilon=1e-08,
+              hidden_layer_sizes=(150, 50, 100), learning_rate='constant',
+              learning_rate_init=0.001, max_fun=15000, max_iter=200,
+              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+              power_t=0.5, random_state=None, shuffle=True, solver='sgd',
+              tol=0.0001, validation_fraction=0.1, verbose=False,
+              warm_start=False)
+              precision    recall  f1-score   support
+
+           0       0.84      0.92      0.88      3274
+           1       0.79      0.63      0.70      1553
+
+    accuracy                           0.83      4827
+   macro avg       0.81      0.77      0.79      4827
+weighted avg       0.82      0.83      0.82      4827
+AUC score: 0.7736074305509939
+
+-----------------------------------
+
