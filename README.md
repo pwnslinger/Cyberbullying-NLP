@@ -1,5 +1,5 @@
 # Cyberbullying-NLP 
-conference paper 
+[![DOI](https://zenodo.org/badge/268175859.svg)](https://zenodo.org/badge/latestdoi/268175859)
 
 ## How to run the pipeline 
 
@@ -500,6 +500,7 @@ weighted avg       0.90      0.90      0.89      7435
 
 -----------------------------------
 ``` 
+
 
 ## TODO 
 
